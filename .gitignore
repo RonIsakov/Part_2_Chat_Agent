@@ -1,0 +1,87 @@
+# Environment variables
+.env
+
+# Virtual environment
+venv/
+env/
+ENV/
+.venv/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Logs
+logs/
+*.log
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+*.cover
+
+# Claude Code
+.claude/
+*.claude
+
+# Test scripts
+test_setup.py
+test_azure_connection.py
+test_phase2.py
+test_phase3.py
+test_phase4.py
+test_phase5.py
+test_phase5_with_errors.py
+test_phase6.py
+extract_and_save_text.py
+
+# Documentation files
+CLAUDE.md
+IMPLEMENTATION_PLAN.md
+nul
+
+# Data directories - exclude outputs but keep structure
+data/output/
+logs/
+
+# Phase 1 and Phase 2 example data
+phase1_data/
+phase2_data/
+
+# Keep directory structure
+!data/input/.gitkeep
+!data/output/.gitkeep
+!logs/.gitkeep
