@@ -1,0 +1,24 @@
+# Backend dependencies for Medical Chatbot API
+
+# Web Framework
+fastapi>=0.109.0
+uvicorn[standard]>=0.27.0
+
+# Data Validation
+pydantic>=2.5.0
+pydantic-settings>=2.1.0
+
+# Azure OpenAI
+openai>=1.12.0
+
+# Vector Database
+chromadb>=0.4.22
+
+# Retry Logic
+tenacity>=8.2.3
+
+# Environment Variables
+python-dotenv>=1.0.0
+
+# CORS Support (included with FastAPI but explicit)
+# fastapi already includes starlette which has CORS

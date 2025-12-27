@@ -79,7 +79,11 @@ logs/
 
 # Phase 1 and Phase 2 example data
 phase1_data/
-phase2_data/
+# phase2_data/ - Keep this for knowledge base
+
+# Part 2 - Medical Chatbot specific
+vector_db/
+data/knowledge_base_markdown/
 
 # Keep directory structure
 !data/input/.gitkeep

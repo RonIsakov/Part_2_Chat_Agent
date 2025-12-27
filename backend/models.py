@@ -202,10 +202,15 @@ class ChatResponse(BaseModel):
     Response model for the chat endpoint.
 
     Contains LLM response plus metadata about the conversation state.
+    Stateless design: returns updated user_data for client to store.
     """
 
     response: str = Field(..., description="LLM response message")
     phase: Literal["collection", "qa"] = Field(..., description="Current conversation phase")
+    user_data: UserData = Field(
+        default_factory=UserData,
+        description="Updated user data (stateless - client must store and send back)"
+    )
     missing_fields: List[str] = Field(
         default_factory=list,
         description="List of missing user data fields (collection phase only)"
