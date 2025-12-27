@@ -9,6 +9,52 @@ from typing import Dict, List, Any
 from backend.models import UserData
 
 
+# Query planning prompt for Agentic RAG
+QUERY_PLANNING_PROMPT = """Analyze the user's question and determine the optimal database query filters.
+
+Available chunk types:
+- "benefit": Specific service benefits (discounts, coverage limits)
+- "contact": Contact information (phone numbers, websites)
+- "context": General background information
+
+Available categories:
+- "dental", "optometry", "alternative", "communication", "pregnancy", "workshops"
+
+Output ONLY valid JSON with these fields:
+{
+  "chunk_type": "benefit" | "contact" | "context" | null,
+  "category": "dental" | "optometry" | "alternative" | "communication" | "pregnancy" | "workshops" | null,
+  "ignore_tier": true | false,
+  "needs_comparison": true | false
+}
+
+Rules:
+- Set "chunk_type": "contact" if user asks about phone numbers, calling, contacting, reaching out
+- Set "ignore_tier": true for contact queries (contact info is tier-agnostic)
+- Set "needs_comparison": true if comparing tiers (gold vs silver) or HMOs
+- Set category if question is about a specific service type
+- Set null for fields that shouldn't be filtered
+
+Examples:
+
+User: "What's Maccabi's phone number?"
+Output: {"chunk_type": "contact", "category": null, "ignore_tier": true, "needs_comparison": false}
+
+User: "How can I contact the dental department?"
+Output: {"chunk_type": "contact", "category": "dental", "ignore_tier": true, "needs_comparison": false}
+
+User: "How much is acupuncture?"
+Output: {"chunk_type": "benefit", "category": "alternative", "ignore_tier": false, "needs_comparison": false}
+
+User: "What's the difference between gold and silver for dental?"
+Output: {"chunk_type": "benefit", "category": "dental", "ignore_tier": true, "needs_comparison": true}
+
+User: "Tell me about alternative medicine"
+Output: {"chunk_type": "context", "category": "alternative", "ignore_tier": true, "needs_comparison": false}
+
+Output ONLY the JSON object, no explanation."""
+
+
 def build_qa_prompt(
     user_data: UserData,
     retrieved_context: str,
