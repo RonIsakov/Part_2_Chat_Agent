@@ -11,9 +11,9 @@ import logging
 import chromadb
 from chromadb.config import Settings as ChromaSettings
 
-# Add parent directory to path
+# Add parent directory to path for local development
 sys.path.insert(0, str(Path(__file__).parent.parent.parent))
-from backend.config import get_backend_settings
+from config import get_backend_settings
 
 # Setup logging
 logger = logging.getLogger(__name__)

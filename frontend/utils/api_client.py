@@ -4,6 +4,7 @@ REST API client for Medical Services Chatbot backend.
 Handles all HTTP communication with the FastAPI backend.
 """
 
+import os
 import requests
 from typing import Dict, List, Any, Optional
 import logging
@@ -164,12 +165,12 @@ class ChatbotAPIClient:
 _api_client = None
 
 
-def get_api_client(backend_url: str = "http://localhost:8000") -> ChatbotAPIClient:
+def get_api_client(backend_url: Optional[str] = None) -> ChatbotAPIClient:
     """
     Get singleton API client instance.
 
     Args:
-        backend_url: Backend URL (only used on first call)
+        backend_url: Backend URL (optional, defaults to BACKEND_URL env var or localhost:8000)
 
     Returns:
         ChatbotAPIClient instance
@@ -177,6 +178,9 @@ def get_api_client(backend_url: str = "http://localhost:8000") -> ChatbotAPIClie
     global _api_client
 
     if _api_client is None:
-        _api_client = ChatbotAPIClient(backend_url)
+        # Use environment variable if available (Docker), otherwise use parameter or default
+        url = backend_url or os.getenv("BACKEND_URL", "http://localhost:8000")
+        logger.info(f"Initializing API client with backend URL: {url}")
+        _api_client = ChatbotAPIClient(url)
 
     return _api_client

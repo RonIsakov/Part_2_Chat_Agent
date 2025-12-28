@@ -177,7 +177,7 @@ class ChatRequest(BaseModel):
 
         Uses MAX_CONVERSATION_HISTORY from BackendSettings.
         """
-        from backend.config import get_backend_settings
+        from config import get_backend_settings
 
         max_history = get_backend_settings().MAX_CONVERSATION_HISTORY
 

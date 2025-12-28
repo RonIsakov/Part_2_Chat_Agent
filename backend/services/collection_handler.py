@@ -11,11 +11,11 @@ from typing import Dict, Any, Tuple
 import logging
 import json
 
-# Add parent directory to path
+# Add parent directory to path for local development
 sys.path.insert(0, str(Path(__file__).parent.parent.parent))
-from backend.models import ChatRequest, ChatResponse, Message, UserData
-from backend.services.openai_client import get_openai_client
-from backend.prompts.collection_prompt import (
+from models import ChatRequest, ChatResponse, Message, UserData
+from services.openai_client import get_openai_client
+from prompts.collection_prompt import (
     EXTRACTION_PROMPT,
     build_generation_prompt
 )

@@ -6,9 +6,14 @@ Two-step pattern:
 2. Generation: Friendly response based on validated data
 """
 
+import sys
+from pathlib import Path
 import json
 from typing import Dict, Optional, Tuple, List
-from backend.models import UserData
+
+# Add parent directory to path for local development
+sys.path.insert(0, str(Path(__file__).parent.parent.parent))
+from models import UserData
 
 
 # System prompt for collection phase

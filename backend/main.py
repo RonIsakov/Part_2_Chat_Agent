@@ -22,14 +22,15 @@ from fastapi import FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
-# Add parent directory to path
+# Add parent directory to path for local development
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from backend.models import ChatRequest, ChatResponse, HealthResponse
-from backend.services.vector_store import get_vector_store
-from backend.services.collection_handler import handle_collection_phase
-from backend.services.qa_handler import handle_qa_phase
-from backend.config import get_backend_settings
+# Use relative imports that work both locally and in Docker
+from models import ChatRequest, ChatResponse, HealthResponse
+from services.vector_store import get_vector_store
+from services.collection_handler import handle_collection_phase
+from services.qa_handler import handle_qa_phase
+from config import get_backend_settings
 
 # Setup logging
 logging.basicConfig(

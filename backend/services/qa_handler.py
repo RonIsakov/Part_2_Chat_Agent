@@ -10,13 +10,13 @@ from typing import Dict, Any, List, Optional
 import logging
 import json
 
-# Add parent directory to path
+# Add parent directory to path for local development
 sys.path.insert(0, str(Path(__file__).parent.parent.parent))
-from backend.models import ChatRequest, ChatResponse, Message, Source
-from backend.services.openai_client import get_openai_client
-from backend.services.vector_store import get_vector_store
-from backend.prompts.qa_prompt import build_qa_prompt, format_retrieved_chunks, QUERY_PLANNING_PROMPT
-from backend.config import get_backend_settings
+from models import ChatRequest, ChatResponse, Message, Source
+from services.openai_client import get_openai_client
+from services.vector_store import get_vector_store
+from prompts.qa_prompt import build_qa_prompt, format_retrieved_chunks, QUERY_PLANNING_PROMPT
+from config import get_backend_settings
 
 # Setup logging
 logger = logging.getLogger(__name__)

@@ -16,6 +16,7 @@ Features:
 
 import streamlit as st
 import sys
+import os
 from pathlib import Path
 from datetime import datetime
 
@@ -213,7 +214,7 @@ def initialize_session_state():
         st.session_state.language_selected = False  # Track if language was chosen
 
     if "backend_url" not in st.session_state:
-        st.session_state.backend_url = "http://localhost:8000"
+        st.session_state.backend_url = os.getenv("BACKEND_URL", "http://localhost:8000")
 
 
 def show_language_selection():

@@ -18,9 +18,9 @@ from tenacity import (
 )
 from openai import AsyncAzureOpenAI, RateLimitError, APIError
 
-# Add parent directory to path
+# Add parent directory to path for local development
 sys.path.insert(0, str(Path(__file__).parent.parent.parent))
-from backend.config import get_settings
+from config import get_settings
 
 # Setup logging
 logger = logging.getLogger(__name__)
