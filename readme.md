@@ -105,7 +105,8 @@ python scripts/ingest_knowledge_base.py
 
 **Expected output (with 6 files):** `Successfully ingested 348 chunks (6 context + 324 benefit + 18 contact)`
 
-**Scalability Note:** The pipeline is fully data-driven. Add new service categories by placing additional HTML files in `phase2_data/` - the conversion and ingestion scripts automatically process all files without code changes.
+**Scalability Note:** The pipeline is fully data-driven.
+ Add new service categories by placing additional HTML files in `phase2_data/` - the conversion and ingestion scripts automatically process all files without code changes.
 
 
 #### Step 6: Launch Services
@@ -119,13 +120,6 @@ Access the application:
 - **Backend API Docs**: http://localhost:8000/docs
 - **ChromaDB Admin**: http://localhost:8001
 
-### Local Development Setup
-
-For detailed setup instructions, see:
-- [DOCKER_SETUP.md](DOCKER_SETUP.md) - Comprehensive Docker guide (339 lines)
-- [RUN_BACKEND.md](RUN_BACKEND.md) - Backend local setup
-- [RUN_FRONTEND.md](RUN_FRONTEND.md) - Frontend local setup
-- [IMPLEMENTATION_PLAN.md](IMPLEMENTATION_PLAN.md) - Technical implementation 
 
 ### API Endpoints
 
