@@ -39,31 +39,76 @@ A stateless, microservice-based chatbot system that provides personalized answer
 
 ### Quick Start with Docker (3 Steps)
 
-#### Step 1: Prepare Vector Database
+#### Step 1: Prepare Knowledge Base and Vector Database
 
-Before running Docker, ingest the knowledge base to create embeddings:
+Before running Docker, you need to prepare the data and create embeddings:
 
 ```bash
-# Install dependencies
-pip install -r backend/requirements.txt
+# 1. Clone the repository
+git clone <repository-url>
+cd to the cloned directory
 
-# Ingest knowledge base (creates ./vector_db/ folder)
+
+# 2. Create and activate virtual environment
+python -m venv venv
+
+# On Windows:
+venv\Scripts\activate
+venv\Scripts\activate
+
+# On macOS/Linux:
+source venv/bin/activate
+source venv/bin/activate
+```
+
+## Configuration
+
+### Step 1: Create `.env` File
+
+Create a `.env` file in the project root directory:
+
+```env
+# Azure Document Intelligence Configuration
+AZURE_DI_ENDPOINT=https://<your-resource>.cognitiveservices.azure.com/
+AZURE_DI_KEY=<your_document_intelligence_key>
+
+# Azure OpenAI Configuration
+AZURE_OPENAI_ENDPOINT=https://<your-resource>.openai.azure.com/
+AZURE_OPENAI_KEY=<your_openai_key>
+AZURE_OPENAI_API_VERSION=2024-02-15-preview
+AZURE_OPENAI_DEPLOYMENT_NAME=gpt-4o
+
+# Optional Application Settings (defaults shown)
+LOG_LEVEL=INFO
+MAX_FILE_SIZE_MB=10
+DATA_INPUT_DIR=data/input
+DATA_OUTPUT_DIR=data/output
+LOGS_DIR=logs
+```
+# Step 2: Place HTML files in phase2_data/
+# The system is SCALABLE - add as many HTML files as you need!
+# Current dataset uses 6 files (alternative, dental, optometry, communication, pregnancy, workshops)
+
+# Step 3: Convert HTML to Markdown
+pip install markdownify
+python scripts/parse_html.py
+
+# This creates markdown files in data/knowledge_base_markdown/
+# Output: "Successfully converted 6/6 files"
+
+# Step 4: Install dependencies for embedding
+pip install chromadb openai python-dotenv
+
+# Step 5: Ingest knowledge base (embeds ALL .md files and stores in ChromaDB)
 python scripts/ingest_knowledge_base.py
 ```
 
-#### Step 2: Configure Environment
+**Expected output (with 6 files):** `Successfully ingested 348 chunks (6 context + 324 benefit + 18 contact)`
 
-Create `.env` file in project root:
+**Scalability Note:** The pipeline is fully data-driven. Add new service categories by placing additional HTML files in `phase2_data/` - the conversion and ingestion scripts automatically process all files without code changes.
 
-```env
-AZURE_OPENAI_API_KEY=your_key_here
-AZURE_OPENAI_ENDPOINT=https://your-endpoint.openai.azure.com/
-AZURE_OPENAI_API_VERSION=2024-02-01
-AZURE_OPENAI_CHAT_DEPLOYMENT_NAME=gpt-4o
-AZURE_OPENAI_EMBEDDING_DEPLOYMENT_NAME=text-embedding-ada-002
-```
 
-#### Step 3: Launch Services
+#### Step 6: Launch Services
 
 ```bash
 docker-compose up --build
@@ -80,7 +125,7 @@ For detailed setup instructions, see:
 - [DOCKER_SETUP.md](DOCKER_SETUP.md) - Comprehensive Docker guide (339 lines)
 - [RUN_BACKEND.md](RUN_BACKEND.md) - Backend local setup
 - [RUN_FRONTEND.md](RUN_FRONTEND.md) - Frontend local setup
-- [IMPLEMENTATION_PLAN.md](IMPLEMENTATION_PLAN.md) - Technical implementation details (724 lines)
+- [IMPLEMENTATION_PLAN.md](IMPLEMENTATION_PLAN.md) - Technical implementation 
 
 ### API Endpoints
 
@@ -362,7 +407,9 @@ async def chat(self, messages, temperature, max_tokens):
 2. **Benefit Chunks (324 total)**: Service × HMO × Tier combinations
 3. **Contact Chunks (18 total)**: HMO × Category contact info
 
-**Total: 348 chunks**
+**Total: 348 chunks (current dataset with 6 markdown files)**
+
+**Scalability:** The ingestion pipeline automatically processes any number of markdown files placed in `data/knowledge_base_markdown/`. Add new service categories without modifying code - the system dynamically detects categories, HMOs, and tiers from the markdown structure
 
 **Metadata Filtering:**
 ```python
