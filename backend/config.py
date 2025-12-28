@@ -25,11 +25,15 @@ class BackendSettings(BaseSettings):
     VECTOR_DB_PATH: str = "./vector_db"
     VECTOR_DB_COLLECTION_NAME: str = "medical_services"
 
+    # ChromaDB Connection (for Docker setup)
+    CHROMA_HOST: Optional[str] = None  # Set to "chromadb" in Docker
+    CHROMA_PORT: Optional[int] = None  # Set to 8000 in Docker
+
     # Rate Limiting
     MAX_CONCURRENT_OPENAI_CALLS: int = 10
 
     # Conversation Settings
-    MAX_CONVERSATION_HISTORY: int = 15  # Keep last 15 messages
+    MAX_CONVERSATION_HISTORY: int = 1000
 
     # Retrieval Settings
     RAG_TOP_K: int = 5  # Number of chunks to retrieve

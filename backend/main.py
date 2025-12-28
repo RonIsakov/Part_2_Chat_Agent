@@ -141,10 +141,11 @@ async def chat_endpoint(request: ChatRequest):
         async with openai_semaphore:
             logger.info(f"Chat request: phase check, message length={len(request.message)}")
 
-            # Check if user data is complete
-            if not request.user_data.is_complete():
+            # Check if user data is complete AND confirmed
+            # Stay in collection phase until user explicitly confirms
+            if not request.user_data.is_complete() or not request.user_data.confirmed:
                 # Collection phase: gather user information
-                logger.info("→ Collection phase")
+                logger.info(f"→ Collection phase (complete={request.user_data.is_complete()}, confirmed={request.user_data.confirmed})")
                 response = await handle_collection_phase(request)
                 logger.info(f"← Collection phase complete: missing_fields={response.missing_fields}")
                 return response

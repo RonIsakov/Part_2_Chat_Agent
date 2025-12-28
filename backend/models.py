@@ -24,6 +24,7 @@ class UserData(BaseModel):
     hmo: Optional[str] = Field(None, description="HMO name: maccabi, meuhedet, or clalit")
     hmo_card: Optional[str] = Field(None, description="9-digit HMO card number")
     tier: Optional[str] = Field(None, description="Insurance tier: gold, silver, or bronze")
+    confirmed: bool = Field(default=False, description="Whether user has confirmed their information")
 
     @field_validator("hmo")
     @classmethod

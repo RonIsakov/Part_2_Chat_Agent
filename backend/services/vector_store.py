@@ -34,11 +34,25 @@ class VectorStoreClient:
         self.settings = get_backend_settings()
 
         try:
-            # Connect to persistent ChromaDB
-            self.client = chromadb.PersistentClient(
-                path=self.settings.VECTOR_DB_PATH,
-                settings=ChromaSettings(anonymized_telemetry=False)
-            )
+            # Check if we're using HTTP client (Docker) or persistent client (local)
+            if self.settings.CHROMA_HOST and self.settings.CHROMA_PORT:
+                # Connect to ChromaDB HTTP server (Docker setup)
+                logger.info(
+                    f"Connecting to ChromaDB HTTP server at "
+                    f"{self.settings.CHROMA_HOST}:{self.settings.CHROMA_PORT}"
+                )
+                self.client = chromadb.HttpClient(
+                    host=self.settings.CHROMA_HOST,
+                    port=self.settings.CHROMA_PORT,
+                    settings=ChromaSettings(anonymized_telemetry=False)
+                )
+            else:
+                # Connect to persistent ChromaDB (local development)
+                logger.info(f"Connecting to local ChromaDB at {self.settings.VECTOR_DB_PATH}")
+                self.client = chromadb.PersistentClient(
+                    path=self.settings.VECTOR_DB_PATH,
+                    settings=ChromaSettings(anonymized_telemetry=False)
+                )
 
             # Get existing collection
             self.collection = self.client.get_collection(

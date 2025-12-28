@@ -204,6 +204,42 @@ async def handle_collection_phase(request: ChatRequest) -> ChatResponse:
         ChatResponse with LLM response, updated user_data, and collection status
     """
     try:
+        # Check if this is the first message (empty conversation history)
+        if len(request.conversation_history) == 0:
+            logger.info("First message - sending introduction")
+
+            # Return introduction message based on language
+            if request.language == "he":
+                greeting = """👋 שלום! אני העוזר הרפואי הדיגיטלי שלך.
+
+אני כאן כדי לעזור לך למצוא מידע מדויק ומותאם אישית על שירותי בריאות של קופת החולים שלך.
+
+לפני שנתחיל, אני צריך לאסוף כמה פרטים בסיסיים כדי לספק לך את המידע הרלוונטי ביותר.
+
+בואו נתחיל - מה שמך המלא?"""
+            else:
+                greeting = """👋 Hello! I'm your digital medical assistant.
+
+I'm here to help you find accurate and personalized information about your HMO's health services.
+
+Before we begin, I need to collect some basic information so I can provide you with the most relevant details.
+
+Let's get started - what is your full name?"""
+
+            return ChatResponse(
+                response=greeting,
+                phase="collection",
+                user_data=request.user_data,
+                missing_fields=request.user_data.get_missing_fields(),
+                sources=[],
+                metadata={
+                    "tokens_used": 0,
+                    "fields_collected": 0,
+                    "is_complete": False,
+                    "is_greeting": True
+                }
+            )
+
         # Get OpenAI client
         openai_client = get_openai_client()
 
@@ -239,13 +275,23 @@ async def handle_collection_phase(request: ChatRequest) -> ChatResponse:
         # Remove the marker from response if present
         if is_complete:
             friendly_response = friendly_response.replace("COLLECTION_COMPLETE", "").strip()
+            # Set confirmed flag when user explicitly confirms
+            updated_user_data.confirmed = True
+            logger.info("User confirmed data - setting confirmed=True")
+
+            # If response is empty after removing marker, add transition message
+            if not friendly_response:
+                if request.language == "he":
+                    friendly_response = "מעולה! הפרטים שלך נשמרו. כעת אתה יכול לשאול אותי כל שאלה על שירותי בריאות של קופת החולים שלך."
+                else:
+                    friendly_response = "Perfect! Your information has been saved. You can now ask me any questions about your HMO's health services."
 
         # Get missing fields
         missing_fields = updated_user_data.get_missing_fields()
 
         logger.info(
             f"Collection phase complete: {len(missing_fields)} fields missing, "
-            f"errors={len(validation_errors)}, complete={is_complete}, tokens={tokens_used}"
+            f"errors={len(validation_errors)}, complete={is_complete}, confirmed={updated_user_data.confirmed}, tokens={tokens_used}"
         )
 
         return ChatResponse(
