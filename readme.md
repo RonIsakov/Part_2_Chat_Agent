@@ -106,7 +106,8 @@ python scripts/ingest_knowledge_base.py
 **Expected output (with 6 files):** `Successfully ingested 348 chunks (6 context + 324 benefit + 18 contact)`
 
 **Scalability Note:** The pipeline is fully data-driven.
- Add new service categories by placing additional HTML files in `phase2_data/` - the conversion and ingestion scripts automatically process all files without code changes.
+ Add new service categories by placing additional HTML files in `phase2_data/`
+- the conversion and ingestion scripts automatically process all files without code changes.
 
 
 #### Step 6: Launch Services
