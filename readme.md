@@ -39,7 +39,7 @@ A stateless, microservice-based chatbot system that provides personalized answer
 
 ### Quick Start with Docker (3 Steps)
 
-#### Step 1: Prepare Knowledge Base and Vector Database
+#### Prepare Knowledge Base and Vector Database
 
 Before running Docker, you need to prepare the data and create embeddings:
 
@@ -85,21 +85,21 @@ DATA_INPUT_DIR=data/input
 DATA_OUTPUT_DIR=data/output
 LOGS_DIR=logs
 ```
-# Step 2: Place HTML files in phase2_data/
-# The system is SCALABLE - add as many HTML files as you need!
-# Current dataset uses 6 files (alternative, dental, optometry, communication, pregnancy, workshops)
+ Step 2: Place HTML files in phase2_data/
+ The system is SCALABLE - add as many HTML files as you need!
+ Current dataset uses 6 files (alternative, dental, optometry, communication, pregnancy, workshops)
 
-# Step 3: Convert HTML to Markdown
+ Step 3: Convert HTML to Markdown
 pip install markdownify
-python scripts/parse_html.py
+ python scripts/parse_html.py
 
-# This creates markdown files in data/knowledge_base_markdown/
-# Output: "Successfully converted 6/6 files"
+This creates markdown files in data/knowledge_base_markdown/
+Output: "Successfully converted 6/6 files"
 
-# Step 4: Install dependencies for embedding
+ Step 4: Install dependencies for embedding
 pip install chromadb openai python-dotenv
 
-# Step 5: Ingest knowledge base (embeds ALL .md files and stores in ChromaDB)
+ Step 5: Ingest knowledge base (embeds ALL .md files and stores in ChromaDB)
 python scripts/ingest_knowledge_base.py
 ```
 
