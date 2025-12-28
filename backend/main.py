@@ -57,25 +57,24 @@ async def lifespan(app: FastAPI):
     logger.info("Starting up Medical Services Chatbot API...")
 
     try:
-        # Initialize vector store (load ChromaDB collection)
-        # get_vector_store() creates singleton and connects to ChromaDB
+        # Initialize vector store for RAG retrieval
         vector_store = get_vector_store()
-        logger.info("✓ Vector store initialized successfully")
+        logger.info("Vector store initialized successfully")
 
         # Log settings
         settings = get_backend_settings()
-        logger.info(f"✓ Settings loaded: RAG_TOP_K={settings.RAG_TOP_K}")
-        logger.info("✓ Startup complete - API ready to serve requests")
+        logger.info(f"Settings loaded: RAG_TOP_K={settings.RAG_TOP_K}")
+        logger.info("Startup complete - API ready to serve requests")
 
     except Exception as e:
-        logger.error(f"✗ Startup failed: {e}")
+        logger.error(f"Startup failed: {e}")
         raise
 
     yield
 
     # Shutdown
     logger.info("Shutting down Medical Services Chatbot API...")
-    logger.info("✓ Shutdown complete")
+    logger.info("Shutdown complete")
 
 
 # Create FastAPI app with lifespan

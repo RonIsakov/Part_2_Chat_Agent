@@ -42,16 +42,16 @@ COLLECTION_SYSTEM_PROMPT_HE = """## תפקיד:
 **מותר לענות רק על**:
 - שאלות הבהרה על השדה הנוכחי שאתה מבקש ממש עכשיו
 - דוגמאות:
-  * אתה שואל על tier → משתמש: "מה זה tier?" או "מה האפשרויות?" → ✓ ענה: "Tier הוא מסלול הביטוח שלך. האפשרויות הן: זהב, כסף, או ארד. איזה tier יש לך?"
-  * אתה שואל על HMO card → משתמש: "מה זה מספר כרטיס?" → ✓ ענה: "המספר בן 9 ספרות על כרטיס החבר שלך. מה המספר?"
-  * אתה שואל על HMO → משתמש: "מה זה קופת חולים?" או "מה האפשרויות?" או "איזה HMO זמין?" → ✓ ענה: "קופת חולים היא הארגון שמספק לך שירותי בריאות. האפשרויות הן: מכבי, מאוחדת, או כללית. באיזו קופת חולים אתה מבוטח?"
-  * אתה שואל על מין → משתמש: "מה האפשרויות?" → ✓ ענה: "האפשרויות הן: זכר, נקבה, או אחר. מה המין שלך?"
+  * אתה שואל על tier → משתמש: "מה זה tier?" או "מה האפשרויות?" → [CORRECT] ענה: "Tier הוא מסלול הביטוח שלך. האפשרויות הן: זהב, כסף, או ארד. איזה tier יש לך?"
+  * אתה שואל על HMO card → משתמש: "מה זה מספר כרטיס?" → [CORRECT] ענה: "המספר בן 9 ספרות על כרטיס החבר שלך. מה המספר?"
+  * אתה שואל על HMO → משתמש: "מה זה קופת חולים?" או "מה האפשרויות?" או "איזה HMO זמין?" → [CORRECT] ענה: "קופת חולים היא הארגון שמספק לך שירותי בריאות. האפשרויות הן: מכבי, מאוחדת, או כללית. באיזו קופת חולים אתה מבוטח?"
+  * אתה שואל על מין → משתמש: "מה האפשרויות?" → [CORRECT] ענה: "האפשרויות הן: זכר, נקבה, או אחר. מה המין שלך?"
 
 **אסור לענות על**:
 - שאלות כלליות (האם העולם עגול? ספר לי על עטלפים?)
 - שאלות רפואיות לא קשורות לשדה הנוכחי (מה זה שיאצו? כמה עולה דיקור סיני?)
 - שיחת חולין (מה קורה אחי? מה נשמע?)
-- שאלות על שדות אחרים שלא מבקשים כרגע (אתה שואל על שם → משתמש: "מה ההבדל בין זהב לכסף?" → ✗ דחה)
+- שאלות על שדות אחרים שלא מבקשים כרגע (אתה שואל על שם → משתמש: "מה ההבדל בין זהב לכסף?" → [REJECT] דחה)
 
 כשדוחה שאלה אסורה, אמור:
 "אני רובוט איסוף מידע בלבד. אני לא יכול לענות על שאלות כרגע. אוכל לעזור לך רק אחרי שנסיים את הרישום. בואו נמשיך - [שאל על השדה החסר]"
@@ -132,16 +132,16 @@ Do not accept the answer and do not continue.
 **You CAN answer only**:
 - Clarification questions about the current field you're asking for right now
 - Examples:
-  * You're asking for tier → User: "What is tier?" or "what are the options?" → ✓ Answer: "Tier is your insurance plan level. The options are: Gold, Silver, or Bronze. Which tier do you have?"
-  * You're asking for HMO card → User: "What is card number?" → ✓ Answer: "The 9-digit number on your HMO membership card. What's the number?"
-  * You're asking for HMO → User: "What is HMO?" or "what are the options?" or "what HMOs are available?" → ✓ Answer: "HMO is the organization providing your healthcare services. The options are: Maccabi, Meuhedet, or Clalit. Which HMO are you with?"
-  * You're asking for gender → User: "what are the options?" → ✓ Answer: "The options are: male, female, or other. What is your gender?"
+  * You're asking for tier → User: "What is tier?" or "what are the options?" → [CORRECT] Answer: "Tier is your insurance plan level. The options are: Gold, Silver, or Bronze. Which tier do you have?"
+  * You're asking for HMO card → User: "What is card number?" → [CORRECT] Answer: "The 9-digit number on your HMO membership card. What's the number?"
+  * You're asking for HMO → User: "What is HMO?" or "what are the options?" or "what HMOs are available?" → [CORRECT] Answer: "HMO is the organization providing your healthcare services. The options are: Maccabi, Meuhedet, or Clalit. Which HMO are you with?"
+  * You're asking for gender → User: "what are the options?" → [CORRECT] Answer: "The options are: male, female, or other. What is your gender?"
 
 **You CANNOT answer**:
 - General questions (Is the Earth round? Tell me about bats?)
 - Medical questions unrelated to current field (What is shiatsu? How much does acupuncture cost?)
 - Casual chat (What's up? How are you?)
-- Questions about other fields you're not asking for now (You're asking for name → User: "What's the difference between gold and silver?" → ✗ Reject)
+- Questions about other fields you're not asking for now (You're asking for name → User: "What's the difference between gold and silver?" → [REJECT])
 
 When rejecting forbidden questions, say:
 "I'm an information collection bot only. I cannot answer questions right now. I can help you only after we finish registration. Let's continue - [ask for the missing field]"
@@ -350,19 +350,19 @@ def build_generation_prompt(
 """
         # Show current data
         if user_data.name:
-            prompt += f"✓ שם: {user_data.name}\n"
+            prompt += f"[COLLECTED] שם: {user_data.name}\n"
         if user_data.id:
-            prompt += f"✓ ת.ז: {user_data.id}\n"
+            prompt += f"[COLLECTED] ת.ז: {user_data.id}\n"
         if user_data.gender:
-            prompt += f"✓ מין: {user_data.gender}\n"
+            prompt += f"[COLLECTED] מין: {user_data.gender}\n"
         if user_data.age is not None:
-            prompt += f"✓ גיל: {user_data.age}\n"
+            prompt += f"[COLLECTED] גיל: {user_data.age}\n"
         if user_data.hmo:
-            prompt += f"✓ קופת חולים: {user_data.hmo}\n"
+            prompt += f"[COLLECTED] קופת חולים: {user_data.hmo}\n"
         if user_data.hmo_card:
-            prompt += f"✓ כרטיס קופת חולים: {user_data.hmo_card}\n"
+            prompt += f"[COLLECTED] כרטיס קופת חולים: {user_data.hmo_card}\n"
         if user_data.tier:
-            prompt += f"✓ מסלול: {user_data.tier}\n"
+            prompt += f"[COLLECTED] מסלול: {user_data.tier}\n"
 
         # Show validation errors (can be multiple)
         if validation_errors:
@@ -420,19 +420,19 @@ You are an information collection bot. Your task: collect 7 fields only.
 """
         # Show current data
         if user_data.name:
-            prompt += f"✓ Name: {user_data.name}\n"
+            prompt += f"[COLLECTED] Name: {user_data.name}\n"
         if user_data.id:
-            prompt += f"✓ ID: {user_data.id}\n"
+            prompt += f"[COLLECTED] ID: {user_data.id}\n"
         if user_data.gender:
-            prompt += f"✓ Gender: {user_data.gender}\n"
+            prompt += f"[COLLECTED] Gender: {user_data.gender}\n"
         if user_data.age is not None:
-            prompt += f"✓ Age: {user_data.age}\n"
+            prompt += f"[COLLECTED] Age: {user_data.age}\n"
         if user_data.hmo:
-            prompt += f"✓ HMO: {user_data.hmo}\n"
+            prompt += f"[COLLECTED] HMO: {user_data.hmo}\n"
         if user_data.hmo_card:
-            prompt += f"✓ HMO card: {user_data.hmo_card}\n"
+            prompt += f"[COLLECTED] HMO card: {user_data.hmo_card}\n"
         if user_data.tier:
-            prompt += f"✓ Tier: {user_data.tier}\n"
+            prompt += f"[COLLECTED] Tier: {user_data.tier}\n"
 
         # Show validation errors (can be multiple)
         if validation_errors:
