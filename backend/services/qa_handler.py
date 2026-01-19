@@ -149,7 +149,8 @@ async def handle_qa_phase(request: ChatRequest) -> ChatResponse:
 
         # Query vector store using the plan
         # Apply tier filter only if plan doesn't say to ignore it
-        tier_filter = None if query_plan.get("ignore_tier") else request.user_data.tier
+        should_ignore_tier = query_plan.get("ignore_tier") or query_plan.get("needs_comparison")
+        tier_filter = None if should_ignore_tier else request.user_data.tier
 
         logger.info(
             f"Querying vector store: hmo={request.user_data.hmo}, tier={tier_filter}, "
